@@ -1,0 +1,40 @@
+using UnityEngine;
+using UnityEngine.AI;
+
+public class S_Deer : MonoBehaviour
+{
+    NavMeshAgent agent;
+    Animator animator;
+
+    public float wanderRadius = 15f;
+    public float wanderTimer = 4f;
+    private float timer;
+
+    void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
+        timer = wanderTimer;
+    }
+
+    void Update()
+    {
+        timer += Time.deltaTime;
+
+        if (timer >= wanderTimer)
+        {
+
+            Vector3 randomPos = transform.position + Random.insideUnitSphere * wanderRadius;
+            randomPos.y = transform.position.y;
+
+            if (NavMesh.SamplePosition(randomPos, out NavMeshHit hit, wanderRadius, NavMesh.AllAreas))
+                agent.SetDestination(hit.position);
+
+            timer = 0;
+        }
+
+        float speed = agent.velocity.magnitude;
+        animator.SetFloat("Vert", speed);       
+        animator.SetFloat("State", speed > 0.1f ? 1f : 0f); 
+    }
+}
