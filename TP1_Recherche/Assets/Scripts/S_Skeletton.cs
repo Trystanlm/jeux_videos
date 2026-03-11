@@ -17,10 +17,12 @@ public class S_Skeletton : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         timer = tempsPatrouille;
+        agent.speed = 1f; 
     }
 
     void Update()
     {
+        if (animator.GetBool("isDead")) return;
         float distanceJoueur = Vector3.Distance(transform.position, joueur.position);
 
         if (distanceJoueur < rayonDetection)

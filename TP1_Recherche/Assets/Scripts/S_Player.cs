@@ -17,10 +17,12 @@ public class S_Player : MonoBehaviour
 
     int nbKeys = 0;
 
+    [SerializeField]
+    private Transform respawnPosition;
 
     public bool bomb = false;
 
-
+    private bool ankhCollected = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
 
@@ -77,5 +79,32 @@ public class S_Player : MonoBehaviour
             nbKeys--;
             controller.useKey();
         }
+        if (hit.gameObject.CompareTag("Skeleton") && !ankhCollected)
+        {
+            Debug.Log("Vous êtes mort !");
+            transform.position = respawnPosition.position;
+        }
+        else if(hit.gameObject.CompareTag("Skeleton") && ankhCollected)
+        {
+            hit.gameObject.GetComponent<Animator>().SetBool("isDead", true);
+        }
+        if (hit.gameObject.CompareTag("Ankh"))
+        {
+            Destroy(hit.gameObject);
+            ankhCollected = true;
+        }
     }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("BombPosition") && bomb)
+        {
+            Debug.Log("Bombe utilisée !");
+            bomb = false;
+            controller.usedBomb();
+        }
+    }
+
+
 }

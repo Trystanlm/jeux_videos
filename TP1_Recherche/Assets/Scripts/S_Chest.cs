@@ -9,6 +9,9 @@ public class S_Chest : MonoBehaviour
     float temps = 2;
     bool ouvert = false;
 
+    public GameObject bombe;
+
+
     void Start()
     {
         // Récupère la vraie rotation de départ
@@ -29,7 +32,9 @@ public class S_Chest : MonoBehaviour
 
     public void Ouvrir()
     {
+
         ouvert = true;
         t = 0;
+        bombe.GetComponent<S_Bombe>().Collecter();
     }
 }

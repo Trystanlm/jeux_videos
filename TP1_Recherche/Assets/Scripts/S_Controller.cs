@@ -12,8 +12,6 @@ public class S_Controller : MonoBehaviour
 
     private int usedKey = 0;
 
-    [SerializeField]
-    private Transform respawnPoint;
 
     [SerializeField]
     private TMP_Text keyText;
@@ -38,6 +36,9 @@ public class S_Controller : MonoBehaviour
 
     private bool chestOpened = false;
 
+    [SerializeField]
+    private GameObject gate;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -58,7 +59,16 @@ public class S_Controller : MonoBehaviour
         }
     }
 
+    private bool hasBombe = false;
 
+    public void collectBombe()
+    {
+        hasBombe = true;
+        // Met à jour le texte ou l'UI
+        chestText.text = "Bombe collectée !";
+
+        playerScript.bomb = true;
+    }
     public void collectKey()
     {
         keyCount++;
@@ -90,13 +100,18 @@ public class S_Controller : MonoBehaviour
 
     IEnumerator OpenGate()
     {
-        for (int i = 0; i < 3; i++)
+
+        GameObject bombeInstance = Instantiate(bombPrefab, bombPosition.position, Quaternion.identity);
+
+        for (int i = 3; i > 0; i--)
         {
-            gateText.text = i.ToString()+"...!";
+            gateText.text = i.ToString() + "...!";
             yield return new WaitForSeconds(1f);
-            
         }
-        gateText.text = "Gate Unlocked !";
+
+        Destroy(bombeInstance);
+        Destroy(gate);
+        gateText.text = "La légende raconte qu'il y a un item sacré caché dans le cimetière permettant de vaincre le squelette.\n Et permet d'ouvrir la crypte une fois tué.";
     }
 
 }
