@@ -23,7 +23,7 @@ public class S_Controller : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        chestText.text = "Chest: Locked! Find all keys.";
+        chestText.text = "Chest: Locked! \n Find all keys.";
         
     }
 
