@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 public class S_Controller : MonoBehaviour
 {
 
@@ -18,7 +19,16 @@ public class S_Controller : MonoBehaviour
     private TMP_Text chestText;
 
     [SerializeField]
+    private TMP_Text gateText;
+
+    [SerializeField]
     S_Chest chestScript;
+
+    [SerializeField]
+    private Transform bombPosition;
+
+    [SerializeField]
+    private GameObject bombPrefab;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -53,6 +63,30 @@ public class S_Controller : MonoBehaviour
             keyCount = 0;
             chestText.text = nbKeys + "/" + numberKey;
         } 
+    }
+
+    public void openGate()
+    {
+        if (usedKey >= numberKey)
+        {
+            gateText.text = "Gate Unlocked !";
+        }
+    }
+
+    public void usedBomb()
+    {
+        StartCoroutine(OpenGate());
+    }
+
+    IEnumerator OpenGate()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            gateText.text = i.ToString()+"...!";
+            yield return new WaitForSeconds(1f);
+            
+        }
+        gateText.text = "Gate Unlocked !";
     }
 
 }
