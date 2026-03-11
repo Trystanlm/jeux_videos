@@ -18,9 +18,12 @@ public class S_Player : MonoBehaviour
     int nbKeys = 0;
 
 
+    public bool bomb = false;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-    
+
     void OnMove(InputValue value)
     {
         direction = value.Get<Vector2>();
@@ -49,10 +52,18 @@ public class S_Player : MonoBehaviour
 
 
         Vector3 move = transform.forward * vitesse * 1f;
-        move.y = -9.81f; // gravité
+        move.y = -9.81f; 
         cc.Move(move * Time.deltaTime);
     }
 
+
+    /*Utilisation de la fonction OnControllerColliderHit pour détecter les collisions avec les objets clés et coffre car nous utilisons un CharacterController pour le mouvement du joueur, 
+     * qui ne génère pas de collisions physiques traditionnelles. 
+     * Cette fonction est appelée chaque fois que le CharacterController entre en collision avec un objet, 
+     * ce qui nous permet de vérifier si cet objet est une clé ou un coffre et d'agir en conséquence.
+     * Car avec un simple capsule collider, les collisions ne sont pas détectées de la même manière que les collisions physiques à cause des animations et du mouvement du personnage, 
+     * ce qui peut entraîner des problèmes de détection de collision.
+    */
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (hit.gameObject.CompareTag("Key"))

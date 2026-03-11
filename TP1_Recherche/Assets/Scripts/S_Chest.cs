@@ -3,11 +3,17 @@ using UnityEngine;
 public class S_Chest : MonoBehaviour
 {
     public Transform couvercle;
-    float depart = 0f;
+    float depart;
     float arrivee = -120f;
     float t = 0;
     float temps = 2;
-    public bool ouvert = false;
+    bool ouvert = false;
+
+    void Start()
+    {
+        // Récupère la vraie rotation de départ
+        depart = couvercle.localEulerAngles.z;
+    }
 
     void Update()
     {

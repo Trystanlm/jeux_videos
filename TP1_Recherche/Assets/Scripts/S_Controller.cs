@@ -13,6 +13,9 @@ public class S_Controller : MonoBehaviour
     private int usedKey = 0;
 
     [SerializeField]
+    private Transform respawnPoint;
+
+    [SerializeField]
     private TMP_Text keyText;
 
     [SerializeField]
@@ -22,6 +25,9 @@ public class S_Controller : MonoBehaviour
     private TMP_Text gateText;
 
     [SerializeField]
+    private S_Player playerScript;
+
+    [SerializeField]
     S_Chest chestScript;
 
     [SerializeField]
@@ -29,6 +35,8 @@ public class S_Controller : MonoBehaviour
 
     [SerializeField]
     private GameObject bombPrefab;
+
+    private bool chestOpened = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -41,10 +49,12 @@ public class S_Controller : MonoBehaviour
     void Update()
     {
         keyText.text = "Keys: " + nbKeys + "/" + numberKey;
-        if (usedKey >= numberKey)
+        if (usedKey >= numberKey && !chestOpened)
         {
+            Debug.Log("All keys used !");
             chestText.text = "Chest Unlocked !";
             chestScript.Ouvrir();
+            chestOpened = true;
         }
     }
 
