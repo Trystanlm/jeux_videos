@@ -19,12 +19,16 @@ public class S_Bombe : MonoBehaviour
 
         while (t < temps)
         {
-            t += Time.deltaTime;
+            t += Time.deltaTime; // On incrémente t à chaque frame pour faire avancer l'animation
 
+            // Lerp déplace la bombe progressivement de sa position de départ vers le joueur
+            // t/temps va de 0 à 1
             transform.position = Vector3.Lerp(depart, joueur.position + Vector3.up, t / temps);
 
+            // LerpAngle réduit le scale de 1 à 0, la bombe rapetisse jusqu'à disparaître
             float scale = Mathf.LerpAngle(1f, 0f, t / temps);
             transform.localScale = Vector3.one * scale;
+
             yield return null;
         }
 

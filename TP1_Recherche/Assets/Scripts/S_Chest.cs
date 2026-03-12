@@ -8,21 +8,20 @@ public class S_Chest : MonoBehaviour
     float t = 0;
     float temps = 2;
     bool ouvert = false;
-
     public GameObject bombe;
-
 
     void Start()
     {
-        // Récupère la vraie rotation de départ
-        depart = couvercle.localEulerAngles.z;
+        depart = couvercle.localEulerAngles.z; // On sauvegarde la rotation de départ du couvercle
     }
 
     void Update()
     {
         if (ouvert)
         {
-            t += Time.deltaTime;
+            t += Time.deltaTime; // On incrémente t à chaque frame pour faire avancer l'animation
+
+            // t/temps va de 0 à 1, ce qui fait progresser l'ouverture
             float angleZ = Mathf.Lerp(depart, arrivee, t / temps);
             Vector3 rot = couvercle.localEulerAngles;
             rot.z = angleZ;
@@ -32,9 +31,8 @@ public class S_Chest : MonoBehaviour
 
     public void Ouvrir()
     {
-
         ouvert = true;
-        t = 0;
+        t = 0; // On remet t à 0 pour que l'animation repart du début
         bombe.GetComponent<S_Bombe>().Collecter();
     }
 }

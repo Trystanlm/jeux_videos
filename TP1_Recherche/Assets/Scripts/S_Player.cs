@@ -15,15 +15,26 @@ public class S_Player : MonoBehaviour
     [SerializeField]
     S_Controller controller;
 
+    [SerializeField] 
+    Transform skeleton;
+
     int nbKeys = 0;
+
+    [SerializeField]
+    private GameObject faisceau;
+
+    [SerializeField]
+    private GameObject crypt;
 
     [SerializeField]
     private Transform respawnPosition;
 
+    [SerializeField]
+    private Transform sphereFollow;
+
     public bool bomb = false;
 
     private bool ankhCollected = false;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
 
 
     void OnMove(InputValue value)
@@ -42,19 +53,58 @@ public class S_Player : MonoBehaviour
 
     void Update()
     {
+        sphereFollow.position = transform.position + new Vector3(0, 20, -5); // Positionne la sphère de suivi au-dessus du joueur
+
+        if (skeleton != null)
+        {
+            // Calcul de la distance entre le skelette et le joueur
+            float distance = Vector3.Distance(transform.position, skeleton.position);
+            if (distance < 0.5f)
+            {
+                if (!ankhCollected)
+                {
+                    cc.enabled = false;
+                    transform.position = respawnPosition.position;
+                    cc.enabled = true;
+                }
+                else
+                {
+                    // Le squelette meurt
+                    skeleton.GetComponent<Animator>().SetBool("isDead", true);
+                    faisceau.SetActive(true);
+                    crypt.SetActive(true);
+                    skeleton = null; 
+                }
+            }
+        }
+
+
         transform.Rotate(new Vector3(0, direction.x * 100f * Time.deltaTime, 0));
 
+        // Si le joueur appuie vers l'avant, on accélère progressivement
         if (direction.y > 0)
+        {
             vitesse += acceleration * Time.deltaTime;
+        }   
+        // Si aucune touche n'est appuyée, on décélère progressivement
         else if (direction.x == 0 && direction.y == 0)
+        {
             vitesse -= acceleration * Time.deltaTime;
+        }
 
+        // On s'assure que la vitesse reste entre 0 et 1
         vitesse = Mathf.Clamp(vitesse, 0, 1);
+
+        // On met à jour l'animation du personnage selon la vitesse
         animator.SetFloat("Weight", vitesse);
 
-
+        // On calcule le vecteur de déplacement vers l'avant du personnage
         Vector3 move = transform.forward * vitesse * 1f;
-        move.y = -9.81f; 
+
+        // On applique la gravité sur l'axe Y pour que le personnage reste au sol
+        move.y = -9.81f;
+
+        // On déplace le personnage via le CharacterController qui gère les collisions
         cc.Move(move * Time.deltaTime);
     }
 
@@ -79,15 +129,6 @@ public class S_Player : MonoBehaviour
             nbKeys--;
             controller.useKey();
         }
-        if (hit.gameObject.CompareTag("Skeleton") && !ankhCollected)
-        {
-            Debug.Log("Vous êtes mort !");
-            transform.position = respawnPosition.position;
-        }
-        else if(hit.gameObject.CompareTag("Skeleton") && ankhCollected)
-        {
-            hit.gameObject.GetComponent<Animator>().SetBool("isDead", true);
-        }
         if (hit.gameObject.CompareTag("Ankh"))
         {
             Destroy(hit.gameObject);
@@ -103,6 +144,11 @@ public class S_Player : MonoBehaviour
             Debug.Log("Bombe utilisée !");
             bomb = false;
             controller.usedBomb();
+        }
+
+        if(other.CompareTag("Crypt"))
+        {
+            controller.EndGame();
         }
     }
 

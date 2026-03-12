@@ -9,6 +9,7 @@ TagManager:
   - BombPosition
   - Skeleton
   - Ankh
+  - Crypt
   layers:
   - Default
   - TransparentFX
